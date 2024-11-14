@@ -9,19 +9,11 @@ The **Doc OCR Tool** is a web-based application for extracting details from Indo
 - **OCR and Structured Data Extraction**: Uses OpenAI's GPT-4o-mini model to extract and structure text from uploaded images.
 - **Dynamic Error Handling**: Displays error messages for unsupported files, connection issues, or unprocessed images.
 
+## Try it yourself
+[Website](https://openai-doc-parser.onrender.com/)
+
 ## Tech Stack
 
 - **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Python, Flask
 - **OCR Processing**: OpenAI's GPT-4o-mini model
-
-## Prerequisites
-
-- Python 3.7 or higher
-- [OpenAI API Key](https://platform.openai.com/signup) with access to the GPT-4o-mini model
-
-## Setup and Installation
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/tekina/openai-doc-parser.git
