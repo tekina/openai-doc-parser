@@ -1,41 +1,160 @@
+/* Reset basic styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styling */
 body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
+    min-height: 100vh;
     background-color: #f4f4f9;
 }
 
+/* Container styling */
 .container {
-    text-align: center;
+    width: 100%;
+    max-width: 500px;
+    background-color: #fff;
     padding: 20px;
-    background: white;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
+/* Beautified heading */
+.container h1 {
+    margin-bottom: 20px;
+    font-size: 28px;
+    color: #333;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    color: #007bff;
+}
+
+/* Labels */
+label {
+    display: block;
+    font-weight: bold;
+    color: #555;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    text-align: left;
+}
+
+/* Radio button group styling */
+.radio-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.radio-group label {
+    font-weight: normal;
+    color: #555;
+    cursor: pointer;
+}
+
+/* Dropdown and file input styling */
+select, input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+}
+
+/* Help text box styling */
+.help-box {
+    background-color: #fff9c4; /* Mild yellow for attention */
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 13px;
+    color: #555;
+    margin-top: 5px; /* Close to file input for connection */
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+/* Button styling */
 button {
-    padding: 10px 20px;
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
     border: none;
-    background: #28a745;
-    color: white;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    transition: background-color 0.3s;
 }
 
 button:hover {
-    background: #218838;
+    background-color: #0056b3;
 }
 
-pre {
-    text-align: left;
-    background: #f4f4f9;
-    padding: 10px;
+/* Error message styling */
+.error-message {
+    display: flex;
+    align-items: center;
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px 15px;
     border-radius: 5px;
-    max-height: 300px;
-    overflow-y: auto;
+    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    text-align: left;
 }
 
+.error-message::before {
+    content: "⚠️";
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+/* Result section styling */
+#result {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Table styling */
+#detailsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+#detailsTable th, #detailsTable td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#detailsTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+#detailsTable td {
+    background-color: #fafafa;
+}
+
+/* Hide table by default */
+#detailsTable {
+    display: none;
+}

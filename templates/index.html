@@ -3,20 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KTP Detail Extractor</title>
+    <title>KTP/NPWP OCR Tool</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>KTP Detail Extractor</h1>
+        <h1>KTP/NPWP OCR Tool</h1>
         <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" name="file" accept="image/*" required>
+            <label>Select Document Type:</label>
+            <div class="radio-group">
+                <label>
+                    <input type="radio" name="fileType" value="KTP">
+                    KTP
+                </label>
+                <label>
+                    <input type="radio" name="fileType" value="NPWP">
+                    NPWP
+                </label>
+            </div>
+
+            <label for="file">Upload File:</label>
+            <input type="file" name="file" id="file" accept="image/*, application/pdf" required>
+
+            <!-- Help text in its own box -->
+            <div class="help-box">
+                Please upload a clear image of your KTP or NPWP document in JPG, PNG, or similar format.
+            </div>
+
             <button type="submit">Upload and Extract</button>
         </form>
-        
+
+        <!-- Result section (Displays extracted details or error message) -->
         <div id="result">
-            <h2>Extracted Details:</h2>
-            <table id="detailsTable" style="display: none;">
+            <h2 id="resultHeading" style="display: none;">Extracted Details:</h2>
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <table id="detailsTable">
                 <thead>
                     <tr>
                         <th>Field</th>
@@ -35,43 +56,86 @@
             event.preventDefault();
 
             const formData = new FormData();
-            formData.append("file", event.target.file.files[0]);
+            const fileType = document.querySelector('input[name="fileType"]:checked');
+            const file = document.getElementById("file").files[0];
 
-            const response = await fetch("/upload", {
-                method: "POST",
-                body: formData
-            });
+            // Check if a document type is selected
+            if (!fileType) {
+                displayError("Please select a document type (KTP or NPWP).");
+                return;
+            }
 
-            const result = await response.json();
+            formData.append("fileType", fileType.value);
+            formData.append("file", file);
 
-            if (result.details) {
-                const detailsTable = document.getElementById('detailsTable');
-                const tbody = detailsTable.querySelector("tbody");
+            try {
+                const response = await fetch("/upload", {
+                    method: "POST",
+                    body: formData
+                });
 
-                // Clear any existing rows
-                tbody.innerHTML = "";
+                const result = await response.json();
 
-                // Populate table with extracted details
-                const details = JSON.parse(result.details); // Parse JSON if returned as a string
-                for (const [field, value] of Object.entries(details)) {
-                    const row = document.createElement("tr");
-                    const fieldCell = document.createElement("td");
-                    const valueCell = document.createElement("td");
-
-                    fieldCell.textContent = field;
-                    valueCell.textContent = value;
-
-                    row.appendChild(fieldCell);
-                    row.appendChild(valueCell);
-                    tbody.appendChild(row);
+                if (response.ok) {
+                    displayError(""); // Clear any previous errors
+                    displayResults(result.details); // Display extracted details
+                } else {
+                    // Display error message from the backend
+                    displayError(result.error || "An unknown error occurred.");
                 }
-
-                detailsTable.style.display = "table"; // Show the table
-            } else {
-                alert("Failed to extract details.");
+            } catch (error) {
+                // Display error if fetch fails
+                displayError("Failed to connect to the server. Please try again.");
             }
         };
+
+        // Function to display extracted details
+        function displayResults(details) {
+            const resultHeading = document.getElementById("resultHeading");
+            const detailsTable = document.getElementById("detailsTable");
+            const errorMessage = document.getElementById("errorMessage");
+
+            // Hide error message and show results heading and table
+            errorMessage.style.display = "none";
+            resultHeading.style.display = "block";
+            detailsTable.style.display = "table";
+
+            const tbody = detailsTable.querySelector("tbody");
+            tbody.innerHTML = ""; // Clear any existing rows
+
+            // Populate table with extracted details
+            const detailsData = JSON.parse(details);
+            for (const [field, value] of Object.entries(detailsData)) {
+                const row = document.createElement("tr");
+                const fieldCell = document.createElement("td");
+                const valueCell = document.createElement("td");
+
+                fieldCell.textContent = field;
+                valueCell.textContent = value;
+
+                row.appendChild(fieldCell);
+                row.appendChild(valueCell);
+                tbody.appendChild(row);
+            }
+        }
+
+        // Function to display error messages
+        function displayError(message) {
+            const errorMessage = document.getElementById("errorMessage");
+            const resultHeading = document.getElementById("resultHeading");
+            const detailsTable = document.getElementById("detailsTable");
+
+            if (message) {
+                // Show the error message and hide results
+                errorMessage.textContent = message;
+                errorMessage.style.display = "block";
+                resultHeading.style.display = "none";
+                detailsTable.style.display = "none";
+            } else {
+                // Hide the error message
+                errorMessage.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
-
