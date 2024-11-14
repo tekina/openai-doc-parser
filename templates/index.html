@@ -24,17 +24,23 @@
             </div>
 
             <label for="file">Upload File:</label>
-            <input type="file" name="file" id="file" accept="image/*, application/pdf" required>
+            <input type="file" name="file" id="file" accept="image/*" required>
 
             <!-- Help text in its own box -->
             <div class="help-box">
-                Please upload a clear image of your KTP or NPWP document in JPG, PNG, or similar format.
+                For best results, please upload a clear image of your document in JPG, PNG, or similar format.
             </div>
 
-            <button type="submit">Upload and Extract</button>
+            <!-- Error message display -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+            <!-- Button with loader -->
+            <button type="submit" id="submitButton">
+                <span id="buttonText">Upload and Extract</span>
+                <img id="loader" src="{{ url_for('static', filename='loader.gif') }}" alt="Loading..." style="display: none; width: 20px; vertical-align: middle;">
+            </button>
         </form>
 
-        <!-- Result section (Displays extracted details or error message) -->
         <div id="result">
             <h2 id="resultHeading" style="display: none;">Extracted Details:</h2>
             <div id="errorMessage" class="error-message" style="display: none;"></div>
@@ -52,19 +58,34 @@
         </div>
     </div>
 
+    <!-- Footer Section -->
+    <footer>
+        <p>&copy; <span id="year"></span> KTP/NPWP OCR Tool. All rights reserved.</p>
+    </footer>
+
     <script>
+
         document.getElementById('uploadForm').onsubmit = async function(event) {
             event.preventDefault();
 
             const formData = new FormData();
             const fileType = document.querySelector('input[name="fileType"]:checked');
             const file = document.getElementById("file").files[0];
+            const submitButton = document.getElementById("submitButton");
+            const buttonText = document.getElementById("buttonText");
+            const loader = document.getElementById("loader");
 
             // Check if a document type is selected
             if (!fileType) {
                 displayError("Please select a document type (KTP or NPWP).");
                 return;
             }
+
+            // Change button to show "Processing" with loader and disable it
+            buttonText.textContent = "Processing";
+            loader.style.display = "inline";
+            submitButton.disabled = true; // Disable the button
+            submitButton.classList.add("disabled-button"); // Add the disabled styling
 
             formData.append("fileType", fileType.value);
             formData.append("file", file);
@@ -81,12 +102,16 @@
                     displayError(""); // Clear any previous errors
                     displayResults(result.details); // Display extracted details
                 } else {
-                    // Display error message from the backend
                     displayError(result.error || "An unknown error occurred.");
                 }
             } catch (error) {
-                // Display error if fetch fails
                 displayError("Failed to connect to the server. Please try again.");
+            } finally {
+                // Reset button text and re-enable it after processing
+                buttonText.textContent = "Upload and Extract";
+                loader.style.display = "none";
+                submitButton.disabled = false; // Re-enable the button
+                submitButton.classList.remove("disabled-button"); // Remove the disabled styling
             }
         };
 
@@ -104,7 +129,6 @@
             const tbody = detailsTable.querySelector("tbody");
             tbody.innerHTML = ""; // Clear any existing rows
 
-            // Populate table with extracted details
             const detailsData = JSON.parse(details);
             for (const [field, value] of Object.entries(detailsData)) {
                 const row = document.createElement("tr");
@@ -127,16 +151,18 @@
             const detailsTable = document.getElementById("detailsTable");
 
             if (message) {
-                // Show the error message and hide results
                 errorMessage.textContent = message;
                 errorMessage.style.display = "block";
                 resultHeading.style.display = "none";
                 detailsTable.style.display = "none";
             } else {
-                // Hide the error message
                 errorMessage.style.display = "none";
             }
         }
+        // Set current year in footer
+        document.getElementById("year").textContent = new Date().getFullYear();
+
     </script>
+
 </body>
 </html>

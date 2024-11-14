@@ -6,13 +6,16 @@
 }
 
 /* Body styling */
-body {
+body, html {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
 }
 
 /* Container styling */
@@ -22,15 +25,21 @@ body {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 /* Beautified heading */
 .container h1 {
     margin-bottom: 20px;
     font-size: 28px;
-    color: #333;
+    /*color: #333;*/
     font-weight: bold;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -84,6 +93,12 @@ select, input[type="file"] {
     margin-top: 5px; /* Close to file input for connection */
     margin-bottom: 15px;
     text-align: left;
+}
+
+.help-box::before {
+    content: "ℹ️";
+    font-size: 15px;
+    margin-right: 3px;
 }
 
 /* Button styling */
@@ -157,4 +172,29 @@ button:hover {
 /* Hide table by default */
 #detailsTable {
     display: none;
+}
+
+#loader {
+    display: none; /* Initially hidden */
+    width: 20px;
+    vertical-align: middle;
+    margin-left: 8px; /* Space between text and loader */
+}
+
+/* Style for the disabled button */
+button:disabled, .disabled-button {
+    background-color: #ccc; /* Gray background */
+    color: #666; /* Dimmed text color */
+    cursor: not-allowed; /* Show 'not allowed' cursor */
+}
+
+/* Footer styling for full-width bottom alignment */
+footer {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f4f4f9;
+    color: #555;
+    font-size: 14px;
+    border-top: 1px solid #ddd;
 }
