@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KTP Detail Extractor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>KTP Detail Extractor</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/*" required>
+            <button type="submit">Upload and Extract</button>
+        </form>
+        
+        <div id="result">
+            <h2>Extracted Details:</h2>
+            <table id="detailsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Details will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').onsubmit = async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            formData.append("file", event.target.file.files[0]);
+
+            const response = await fetch("/upload", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.details) {
+                const detailsTable = document.getElementById('detailsTable');
+                const tbody = detailsTable.querySelector("tbody");
+
+                // Clear any existing rows
+                tbody.innerHTML = "";
+
+                // Populate table with extracted details
+                const details = JSON.parse(result.details); // Parse JSON if returned as a string
+                for (const [field, value] of Object.entries(details)) {
+                    const row = document.createElement("tr");
+                    const fieldCell = document.createElement("td");
+                    const valueCell = document.createElement("td");
+
+                    fieldCell.textContent = field;
+                    valueCell.textContent = value;
+
+                    row.appendChild(fieldCell);
+                    row.appendChild(valueCell);
+                    tbody.appendChild(row);
+                }
+
+                detailsTable.style.display = "table"; // Show the table
+            } else {
+                alert("Failed to extract details.");
+            }
+        };
+    </script>
+</body>
+</html>
+
