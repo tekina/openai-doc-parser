@@ -19,6 +19,18 @@
 <body>
     <div class="container">
         <h1>KTP/NPWP OCR Tool</h1>
+
+        <!-- Sample Downloads -->
+        <div class="sample-downloads">
+          <p>Don’t have your own file? Try with our samples:</p>
+          <a class="sample-link" href="{{ url_for('static', filename='sample_ktp.png') }}" download>
+            ⬇️ Download Sample KTP
+          </a>
+          <a class="sample-link" href="{{ url_for('static', filename='sample_npwp.jpeg') }}" download>
+            ⬇️ Download Sample NPWP
+          </a>
+        </div>
+        
         <form id="uploadForm" enctype="multipart/form-data">
             <label>Select Document Type:</label>
             <div class="radio-group">
